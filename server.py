@@ -92,11 +92,8 @@ async def browser_fetch_page(params: FetchPageInput) -> str:
         url = page.url
         text = await page.inner_text("body")
         cleaned = _clean_text(text)
-        return json.dumps({"success": True, "title": title, "url": url,
+        return json.dumps({"title": title, "url": url,
                            "content_length": len(cleaned), "content": cleaned}, indent=2)
-    except Exception as e:
-        return json.dumps({"success": False, "error": f"{type(e).__name__}: {str(e)}",
-                           "url": params.url}, indent=2)
     finally:
         if browser:
             await browser.close()
@@ -109,7 +106,7 @@ async def browser_fetch_page(params: FetchPageInput) -> str:
     annotations={"title": "Screenshot Page via Browser", "readOnlyHint": True,
                  "destructiveHint": False, "idempotentHint": True, "openWorldHint": True},
 )
-async def browser_screenshot(params: ScreenshotInput) -> list:
+async def browser_screenshot(params: ScreenshotInput) -> list[dict]:
     """Take a screenshot of a web page using a real Chromium browser."""
     pw = None
     browser = None
@@ -132,9 +129,6 @@ async def browser_screenshot(params: ScreenshotInput) -> list:
             {"type": "text", "text": f"Screenshot of: {title}\nURL: {params.url}"},
             {"type": "image", "data": b64, "mimeType": "image/png"},
         ]
-    except Exception as e:
-        return json.dumps({"success": False, "error": f"{type(e).__name__}: {str(e)}",
-                           "url": params.url}, indent=2)
     finally:
         if browser:
             await browser.close()
