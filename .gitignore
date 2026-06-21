@@ -6,3 +6,8 @@ __pycache__/
 server_fixed.py
 test_fetch.py
 test_imports.py
+
+# Windows GPU driver logs
+NVIDIA Corporation/
+umdlogs/
+*.log
